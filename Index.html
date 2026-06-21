@@ -1,0 +1,745 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The Mikkelsen Faithful — Affiliate Application</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;1,500&family=Inter:wght@400;500;600&display=swap');
+
+:root {
+  --ink: #15130F;
+  --ink-2: #1C1914;
+  --parchment: #EFE7D8;
+  --wine: #7C1F2B;
+  --wine-light: #9C3140;
+  --gold: #C8A24A;
+  --stone: #8B8475;
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; background: var(--ink); }
+body { font-family: 'Inter', Arial, sans-serif; color: var(--parchment); }
+
+.page { max-width: 760px; margin: 0 auto; padding: 64px 24px 80px; position: relative; }
+
+.top-bar { display: flex; justify-content: flex-end; margin-bottom: 8px; }
+.lang-switcher {
+  background: var(--ink-2);
+  border: 1px solid #322D24;
+  color: var(--stone);
+  padding: 8px 12px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 13px;
+  border-radius: 2px;
+  cursor: pointer;
+}
+.lang-switcher:focus { outline: none; border-color: var(--gold); color: var(--parchment); }
+
+.sprocket { display: flex; justify-content: space-between; padding: 0 4px 28px; }
+.sprocket-hole { width: 7px; height: 11px; background: var(--ink-2); border: 1px solid #2A261E; border-radius: 2px; }
+
+.eyebrow {
+  font-family: 'Inter', Arial, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  font-size: 12px;
+  color: var(--gold);
+  margin: 0 0 18px;
+}
+
+h1 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-weight: 600;
+  font-size: 64px;
+  line-height: 1.05;
+  margin: 0 0 24px;
+  color: var(--parchment);
+}
+
+.hero { text-align: left; border-bottom: 1px solid #2A261E; padding-bottom: 48px; margin-bottom: 48px; }
+.hero-sub { font-size: 17px; line-height: 1.65; color: var(--stone); max-width: 520px; margin: 0 0 32px; }
+
+.cta {
+  background: var(--wine);
+  color: var(--parchment);
+  border: 1px solid var(--wine-light);
+  padding: 14px 28px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 15px;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+  transition: background 0.15s ease, transform 0.1s ease;
+}
+.cta:hover { background: var(--wine-light); }
+.cta:active { transform: translateY(1px); }
+.cta:focus-visible { outline: 2px solid var(--gold); outline-offset: 3px; }
+.cta:disabled { opacity: 0.6; cursor: default; }
+
+.dossier { display: flex; flex-direction: column; gap: 36px; }
+.dossier-row { display: flex; gap: 20px; }
+.dossier-index {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 28px;
+  color: var(--gold);
+  width: 36px;
+  flex-shrink: 0;
+}
+.dossier-row h3 {
+  font-family: 'Cormorant Garamond', Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  margin: 0 0 8px;
+}
+.dossier-row p { font-size: 15px; line-height: 1.6; color: var(--stone); margin: 0; max-width: 520px; }
+
+.landing-footer { margin-top: 64px; border-top: 1px solid #2A261E; padding-top: 20px; }
+.landing-footer p { font-size: 12px; color: #5E594D; margin: 0; }
+
+.back-link {
+  background: none; border: none; color: var(--stone); font-family: 'Inter', Arial, sans-serif;
+  font-size: 14px; cursor: pointer; padding: 0; margin-bottom: 32px;
+}
+.back-link:hover { color: var(--parchment); }
+
+.form-title { font-size: 44px; margin-bottom: 8px; }
+.form-sub { color: var(--stone); font-size: 14px; margin: 0 0 36px; letter-spacing: 0.02em; }
+
+.grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+.grid-3 { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; }
+@media (max-width: 600px) {
+  .grid-2, .grid-3 { grid-template-columns: 1fr; }
+  h1 { font-size: 44px; }
+}
+
+.field { display: flex; flex-direction: column; margin-bottom: 20px; }
+.field-full { grid-column: 1 / -1; }
+.field-label { font-size: 12.5px; color: var(--stone); margin-bottom: 7px; letter-spacing: 0.02em; display: block; }
+
+input, select {
+  width: 100%;
+  background: var(--ink-2);
+  border: 1px solid #322D24;
+  color: var(--parchment);
+  padding: 12px 14px;
+  font-family: 'Inter', Arial, sans-serif;
+  font-size: 15px;
+  border-radius: 2px;
+}
+input:focus, select:focus { outline: none; border-color: var(--gold); }
+select { appearance: none; }
+
+.error { color: #C9685F; font-size: 12px; margin-top: 6px; display: block; }
+
+.cta-submit { margin-top: 12px; width: 100%; padding: 16px; font-size: 16px; }
+
+.success { text-align: left; padding-top: 96px; }
+.success-body { font-size: 17px; line-height: 1.65; color: var(--stone); max-width: 480px; margin: 0 0 36px; }
+</style>
+</head>
+<body>
+<div id="root"></div>
+
+<script>
+"use strict";
+
+// ---------------------------------------------------------------------------
+// Translations
+// ---------------------------------------------------------------------------
+var LANGUAGES = [
+  { code: "en", label: "English" },
+  { code: "da", label: "Dansk" },
+  { code: "de", label: "Deutsch" },
+  { code: "fr", label: "Français" },
+  { code: "es", label: "Español" },
+  { code: "it", label: "Italiano" },
+  { code: "nl", label: "Nederlands" },
+  { code: "pt", label: "Português" },
+  { code: "sv", label: "Svenska" },
+  { code: "no", label: "Norsk" },
+  { code: "pl", label: "Polski" }
+];
+
+var TRANSLATIONS = {
+  en: {
+    eyebrow: "Reel No. 04 — Open Casting",
+    heroTitle1: "The Mikkelsen", heroTitle2: "Faithful",
+    heroSub: "A standing affiliate network for people who have watched every frame, learned the cheekbones, and quote the silences too. Apply once. Represent for as long as you mean it.",
+    begin: "Begin application",
+    d1Title: "What this is",
+    d1Body: "An affiliate program for fan-run shops, newsletters, and pages dedicated to Mads Mikkelsen's work. Approved affiliates get a referral link, a commission rate, and first look at new prints, retrospectives, and screenings we partner on.",
+    d2Title: "Who we're looking for",
+    d2Body: "No follower minimums. We care more about how long you've held the obsession and how clearly you can talk about the work — Hannibal's restraint, Riget's dread, Another Round's joy and grief in the same breath.",
+    d3Title: "What we ask",
+    d3Body: "Your contact and mailing details, for payouts and the occasional physical mail-out, and one honest answer: how long have you been a fan?",
+    footer: "The Mikkelsen Faithful — the official affiliate desk for Mads Mikkelsen's fan community.",
+    back: "← Back",
+    formTitle: "Application",
+    formSub: "Reel No. 04 — fill every frame. All fields required.",
+    firstName: "First name", lastName: "Last name", email: "Email address", phone: "Phone number",
+    address: "House address", city: "City", state: "State / Province", zip: "ZIP / Postal code",
+    country: "Country", selectCountry: "Select a country", countryOther: "Type your country",
+    fanSince: "How long have you been a Mads Mikkelsen fan?", selectOne: "Select one",
+    fan1: "Less than a year", fan2: "1–3 years", fan3: "3–6 years",
+    fan4: "Since Hannibal (2013)", fan5: "Since Pusher / Riget era", fan6: "As long as I can remember",
+    required: "Required", invalidEmail: "Enter a valid email",
+    submitting: "Submitting…", submit: "Submit application",
+    successEyebrow: "Application received", successTitle: "Cut. Print.",
+    successBody: function(name, email) { return "Thank you, " + name + ". Your application is on file. We review every reel by hand — expect to hear back within five business days at " + email + "."; },
+    home: "Return home"
+  },
+  da: {
+    eyebrow: "Rulle nr. 04 — Åben Casting",
+    heroTitle1: "De Mikkelsen-", heroTitle2: "trofaste",
+    heroSub: "Et fast affiliate-netværk for folk, der har set hver eneste billede, lært kindbenene at kende og citerer stilhederne også. Ansøg én gang. Repræsenter, så længe du mener det.",
+    begin: "Start ansøgning",
+    d1Title: "Hvad det er",
+    d1Body: "Et affiliate-program for fan-drevne butikker, nyhedsbreve og sider dedikeret til Mads Mikkelsens arbejde. Godkendte affiliates får et henvisningslink, en provisionssats og første kig på nye prints, retrospektiver og visninger, vi samarbejder om.",
+    d2Title: "Hvem vi søger",
+    d2Body: "Ingen krav til følgertal. Vi lægger mere vægt på, hvor længe du har haft fascinationen, og hvor klart du kan tale om arbejdet — Hannibals tilbageholdenhed, Rigets gru, Druks glæde og sorg i samme åndedrag.",
+    d3Title: "Hvad vi spørger om",
+    d3Body: "Dine kontakt- og postoplysninger, til udbetalinger og en sjælden fysisk forsendelse, samt ét ærligt svar: hvor længe har du været fan?",
+    footer: "De Mikkelsen-trofaste — den officielle affiliate-skranke for Mads Mikkelsens fanfællesskab.",
+    back: "← Tilbage",
+    formTitle: "Ansøgning",
+    formSub: "Rulle nr. 04 — udfyld hvert billede. Alle felter er obligatoriske.",
+    firstName: "Fornavn", lastName: "Efternavn", email: "E-mailadresse", phone: "Telefonnummer",
+    address: "Hjemmeadresse", city: "By", state: "Stat / Region", zip: "Postnummer",
+    country: "Land", selectCountry: "Vælg et land", countryOther: "Skriv dit land",
+    fanSince: "Hvor længe har du været fan af Mads Mikkelsen?", selectOne: "Vælg én",
+    fan1: "Mindre end et år", fan2: "1–3 år", fan3: "3–6 år",
+    fan4: "Siden Hannibal (2013)", fan5: "Siden Pusher / Riget-æraen", fan6: "Så længe jeg kan huske",
+    required: "Obligatorisk", invalidEmail: "Indtast en gyldig e-mail",
+    submitting: "Sender…", submit: "Indsend ansøgning",
+    successEyebrow: "Ansøgning modtaget", successTitle: "Klip. Print.",
+    successBody: function(name, email) { return "Tak, " + name + ". Din ansøgning er registreret. Vi gennemgår hver rulle manuelt — forvent svar inden for fem hverdage på " + email + "."; },
+    home: "Tilbage til forsiden"
+  },
+  de: {
+    eyebrow: "Rolle Nr. 04 — Offenes Casting",
+    heroTitle1: "Die Mikkelsen-", heroTitle2: "Treuen",
+    heroSub: "Ein festes Affiliate-Netzwerk für alle, die jede Einstellung gesehen, die Wangenknochen studiert und auch die Stille zitiert haben. Einmal bewerben. Vertreten, solange es ernst gemeint ist.",
+    begin: "Bewerbung starten",
+    d1Title: "Worum es geht",
+    d1Body: "Ein Affiliate-Programm für Fan-Shops, Newsletter und Seiten rund um das Werk von Mads Mikkelsen. Zugelassene Affiliates erhalten einen Empfehlungslink, eine Provision und frühen Zugang zu neuen Prints, Retrospektiven und Vorführungen, mit denen wir kooperieren.",
+    d2Title: "Wen wir suchen",
+    d2Body: "Keine Mindest-Followerzahl. Wichtiger ist uns, wie lange die Begeisterung schon besteht und wie klar du über das Werk sprechen kannst — Hannibals Zurückhaltung, das Grauen in Riget, Freude und Trauer in Der Rausch im selben Atemzug.",
+    d3Title: "Was wir benötigen",
+    d3Body: "Deine Kontakt- und Postanschrift für Auszahlungen und gelegentliche Sendungen sowie eine ehrliche Antwort: Wie lange bist du schon Fan?",
+    footer: "Die Mikkelsen-Treuen — die offizielle Affiliate-Stelle für die Fan-Community von Mads Mikkelsen.",
+    back: "← Zurück",
+    formTitle: "Bewerbung",
+    formSub: "Rolle Nr. 04 — jedes Feld ausfüllen. Alle Angaben erforderlich.",
+    firstName: "Vorname", lastName: "Nachname", email: "E-Mail-Adresse", phone: "Telefonnummer",
+    address: "Hausadresse", city: "Stadt", state: "Bundesland", zip: "Postleitzahl",
+    country: "Land", selectCountry: "Land auswählen", countryOther: "Gib dein Land ein",
+    fanSince: "Wie lange bist du schon Fan von Mads Mikkelsen?", selectOne: "Auswählen",
+    fan1: "Weniger als ein Jahr", fan2: "1–3 Jahre", fan3: "3–6 Jahre",
+    fan4: "Seit Hannibal (2013)", fan5: "Seit der Pusher-/Riget-Ära", fan6: "Soweit ich mich erinnern kann",
+    required: "Erforderlich", invalidEmail: "Bitte eine gültige E-Mail eingeben",
+    submitting: "Wird gesendet…", submit: "Bewerbung absenden",
+    successEyebrow: "Bewerbung erhalten", successTitle: "Schnitt. Druck.",
+    successBody: function(name, email) { return "Danke, " + name + ". Deine Bewerbung liegt vor. Wir prüfen jede Rolle von Hand — Antwort innerhalb von fünf Werktagen an " + email + "."; },
+    home: "Zur Startseite"
+  },
+  fr: {
+    eyebrow: "Bobine n° 04 — Casting ouvert",
+    heroTitle1: "Les fidèles", heroTitle2: "de Mikkelsen",
+    heroSub: "Un réseau d'affiliation permanent pour ceux qui ont vu chaque image, appris les pommettes par cœur et citent même les silences. Postulez une fois. Représentez tant que c'est sincère.",
+    begin: "Commencer la candidature",
+    d1Title: "De quoi il s'agit",
+    d1Body: "Un programme d'affiliation pour les boutiques, newsletters et pages de fans dédiées au travail de Mads Mikkelsen. Les affiliés approuvés reçoivent un lien de parrainage, un taux de commission et un accès prioritaire aux nouveaux tirages, rétrospectives et projections en partenariat.",
+    d2Title: "Qui nous recherchons",
+    d2Body: "Aucun minimum d'abonnés exigé. Ce qui compte, c'est depuis combien de temps dure la passion et la clarté avec laquelle vous parlez de l'œuvre — la retenue d'Hannibal, l'angoisse de Riget, la joie et le chagrin d'Another Round dans le même souffle.",
+    d3Title: "Ce que nous demandons",
+    d3Body: "Vos coordonnées et adresse postale, pour les versements et quelques envois physiques occasionnels, ainsi qu'une réponse sincère : depuis combien de temps êtes-vous fan ?",
+    footer: "Les fidèles de Mikkelsen — le guichet d'affiliation officiel de la communauté de fans de Mads Mikkelsen.",
+    back: "← Retour",
+    formTitle: "Candidature",
+    formSub: "Bobine n° 04 — remplissez chaque image. Tous les champs sont obligatoires.",
+    firstName: "Prénom", lastName: "Nom", email: "Adresse e-mail", phone: "Numéro de téléphone",
+    address: "Adresse postale", city: "Ville", state: "État / Région", zip: "Code postal",
+    country: "Pays", selectCountry: "Sélectionnez un pays", countryOther: "Saisissez votre pays",
+    fanSince: "Depuis combien de temps êtes-vous fan de Mads Mikkelsen ?", selectOne: "Choisissez une option",
+    fan1: "Moins d'un an", fan2: "1 à 3 ans", fan3: "3 à 6 ans",
+    fan4: "Depuis Hannibal (2013)", fan5: "Depuis l'époque Pusher / Riget", fan6: "Depuis aussi longtemps que je m'en souvienne",
+    required: "Obligatoire", invalidEmail: "Saisissez un e-mail valide",
+    submitting: "Envoi…", submit: "Envoyer la candidature",
+    successEyebrow: "Candidature reçue", successTitle: "Coupez. Imprimez.",
+    successBody: function(name, email) { return "Merci, " + name + ". Votre candidature est enregistrée. Nous examinons chaque bobine à la main — réponse attendue dans les cinq jours ouvrés à " + email + "."; },
+    home: "Retour à l'accueil"
+  },
+  es: {
+    eyebrow: "Rollo n.º 04 — Casting abierto",
+    heroTitle1: "Los fieles de", heroTitle2: "Mikkelsen",
+    heroSub: "Una red de afiliados permanente para quienes han visto cada fotograma, memorizado los pómulos y citan también los silencios. Postula una vez. Representa mientras sea sincero.",
+    begin: "Iniciar solicitud",
+    d1Title: "De qué se trata",
+    d1Body: "Un programa de afiliados para tiendas, boletines y páginas de fans dedicadas al trabajo de Mads Mikkelsen. Los afiliados aprobados obtienen un enlace de referido, una comisión y acceso anticipado a nuevas láminas, retrospectivas y proyecciones con las que colaboramos.",
+    d2Title: "A quién buscamos",
+    d2Body: "Sin mínimos de seguidores. Nos importa más cuánto tiempo lleva la obsesión y con qué claridad puedes hablar de la obra: la contención de Hannibal, el terror de Riget, la alegría y el duelo de Otra ronda en el mismo aliento.",
+    d3Title: "Qué pedimos",
+    d3Body: "Tus datos de contacto y dirección postal, para pagos y algún envío físico ocasional, y una respuesta sincera: ¿cuánto tiempo llevas siendo fan?",
+    footer: "Los fieles de Mikkelsen — la mesa de afiliados oficial de la comunidad de fans de Mads Mikkelsen.",
+    back: "← Volver",
+    formTitle: "Solicitud",
+    formSub: "Rollo n.º 04 — completa cada fotograma. Todos los campos son obligatorios.",
+    firstName: "Nombre", lastName: "Apellido", email: "Correo electrónico", phone: "Número de teléfono",
+    address: "Dirección postal", city: "Ciudad", state: "Estado / Provincia", zip: "Código postal",
+    country: "País", selectCountry: "Selecciona un país", countryOther: "Escribe tu país",
+    fanSince: "¿Cuánto tiempo llevas siendo fan de Mads Mikkelsen?", selectOne: "Selecciona una opción",
+    fan1: "Menos de un año", fan2: "1–3 años", fan3: "3–6 años",
+    fan4: "Desde Hannibal (2013)", fan5: "Desde la era de Pusher / Riget", fan6: "Desde que tengo memoria",
+    required: "Obligatorio", invalidEmail: "Introduce un correo válido",
+    submitting: "Enviando…", submit: "Enviar solicitud",
+    successEyebrow: "Solicitud recibida", successTitle: "Corte. Imprime.",
+    successBody: function(name, email) { return "Gracias, " + name + ". Tu solicitud está registrada. Revisamos cada rollo a mano — espera noticias en cinco días hábiles en " + email + "."; },
+    home: "Volver al inicio"
+  },
+  it: {
+    eyebrow: "Bobina n. 04 — Casting aperto",
+    heroTitle1: "I fedeli di", heroTitle2: "Mikkelsen",
+    heroSub: "Una rete di affiliazione permanente per chi ha visto ogni fotogramma, imparato gli zigomi a memoria e cita anche i silenzi. Candidati una volta. Rappresenta finché è sincero.",
+    begin: "Inizia la candidatura",
+    d1Title: "Di cosa si tratta",
+    d1Body: "Un programma di affiliazione per negozi, newsletter e pagine di fan dedicate al lavoro di Mads Mikkelsen. Gli affiliati approvati ricevono un link di riferimento, una percentuale di commissione e accesso anticipato a nuove stampe, retrospettive e proiezioni in partnership.",
+    d2Title: "Chi stiamo cercando",
+    d2Body: "Nessun minimo di follower richiesto. Conta di più da quanto dura la passione e quanto chiaramente sai parlare dell'opera — il riserbo di Hannibal, il terrore di Riget, la gioia e il dolore di Un altro giro nello stesso respiro.",
+    d3Title: "Cosa chiediamo",
+    d3Body: "I tuoi dati di contatto e l'indirizzo postale, per i pagamenti e qualche spedizione fisica occasionale, più una risposta sincera: da quanto tempo sei fan?",
+    footer: "I fedeli di Mikkelsen — lo sportello affiliati ufficiale della community di fan di Mads Mikkelsen.",
+    back: "← Indietro",
+    formTitle: "Candidatura",
+    formSub: "Bobina n. 04 — compila ogni fotogramma. Tutti i campi sono obbligatori.",
+    firstName: "Nome", lastName: "Cognome", email: "Indirizzo email", phone: "Numero di telefono",
+    address: "Indirizzo di casa", city: "Città", state: "Stato / Regione", zip: "Codice postale",
+    country: "Paese", selectCountry: "Seleziona un paese", countryOther: "Scrivi il tuo paese",
+    fanSince: "Da quanto tempo sei fan di Mads Mikkelsen?", selectOne: "Seleziona un'opzione",
+    fan1: "Meno di un anno", fan2: "1–3 anni", fan3: "3–6 anni",
+    fan4: "Da Hannibal (2013)", fan5: "Dall'epoca di Pusher / Riget", fan6: "Da quanto riesco a ricordare",
+    required: "Obbligatorio", invalidEmail: "Inserisci un'email valida",
+    submitting: "Invio…", submit: "Invia candidatura",
+    successEyebrow: "Candidatura ricevuta", successTitle: "Stop. Stampa.",
+    successBody: function(name, email) { return "Grazie, " + name + ". La tua candidatura è registrata. Esaminiamo ogni bobina a mano — risposta entro cinque giorni lavorativi a " + email + "."; },
+    home: "Torna alla home"
+  },
+  nl: {
+    eyebrow: "Rol nr. 04 — Open casting",
+    heroTitle1: "De Mikkelsen-", heroTitle2: "getrouwen",
+    heroSub: "Een vast affiliate-netwerk voor mensen die elk shot hebben gezien, de jukbeenderen kennen en ook de stiltes citeren. Meld je één keer aan. Vertegenwoordig zolang het oprecht is.",
+    begin: "Begin aanvraag",
+    d1Title: "Wat dit is",
+    d1Body: "Een affiliateprogramma voor fan-shops, nieuwsbrieven en pagina's gewijd aan het werk van Mads Mikkelsen. Goedgekeurde affiliates krijgen een verwijzingslink, een commissiepercentage en eerste toegang tot nieuwe prints, retrospectieven en vertoningen waarmee we samenwerken.",
+    d2Title: "Wie we zoeken",
+    d2Body: "Geen minimum aantal volgers. Belangrijker is hoelang je obsessie al duurt en hoe duidelijk je over het werk kunt praten — Hannibals beheerstheid, de dreiging in Riget, vreugde en verdriet in Druk in één adem.",
+    d3Title: "Wat we vragen",
+    d3Body: "Je contact- en adresgegevens, voor uitbetalingen en af en toe een fysieke verzending, en één eerlijk antwoord: hoelang ben je al fan?",
+    footer: "De Mikkelsen-getrouwen — het officiële affiliatebureau van de fancommunity van Mads Mikkelsen.",
+    back: "← Terug",
+    formTitle: "Aanvraag",
+    formSub: "Rol nr. 04 — vul elk frame in. Alle velden zijn verplicht.",
+    firstName: "Voornaam", lastName: "Achternaam", email: "E-mailadres", phone: "Telefoonnummer",
+    address: "Huisadres", city: "Stad", state: "Staat / Provincie", zip: "Postcode",
+    country: "Land", selectCountry: "Selecteer een land", countryOther: "Typ je land",
+    fanSince: "Hoelang ben je al fan van Mads Mikkelsen?", selectOne: "Selecteer een optie",
+    fan1: "Minder dan een jaar", fan2: "1–3 jaar", fan3: "3–6 jaar",
+    fan4: "Sinds Hannibal (2013)", fan5: "Sinds het Pusher / Riget-tijdperk", fan6: "Zolang ik me kan herinneren",
+    required: "Verplicht", invalidEmail: "Voer een geldig e-mailadres in",
+    submitting: "Verzenden…", submit: "Aanvraag versturen",
+    successEyebrow: "Aanvraag ontvangen", successTitle: "Cut. Print.",
+    successBody: function(name, email) { return "Dank je, " + name + ". Je aanvraag staat genoteerd. We beoordelen elke rol met de hand — verwacht binnen vijf werkdagen een reactie op " + email + "."; },
+    home: "Terug naar home"
+  },
+  pt: {
+    eyebrow: "Bobina n.º 04 — Casting aberto",
+    heroTitle1: "Os fiéis de", heroTitle2: "Mikkelsen",
+    heroSub: "Uma rede de afiliados permanente para quem já viu cada fotograma, aprendeu as maçãs do rosto de cor e cita até os silêncios. Inscreva-se uma vez. Represente enquanto for sincero.",
+    begin: "Iniciar inscrição",
+    d1Title: "Sobre o que é isto",
+    d1Body: "Um programa de afiliados para lojas, newsletters e páginas de fãs dedicadas ao trabalho de Mads Mikkelsen. Afiliados aprovados recebem um link de referência, uma taxa de comissão e acesso antecipado a novas impressões, retrospetivas e exibições com que colaboramos.",
+    d2Title: "Quem procuramos",
+    d2Body: "Sem mínimo de seguidores. Importa mais há quanto tempo dura a obsessão e com que clareza falas sobre o trabalho — a contenção de Hannibal, o pavor de Riget, a alegria e o luto de Druk no mesmo fôlego.",
+    d3Title: "O que pedimos",
+    d3Body: "Os teus dados de contacto e endereço postal, para pagamentos e algum envio físico ocasional, além de uma resposta sincera: há quanto tempo és fã?",
+    footer: "Os fiéis de Mikkelsen — o balcão de afiliados oficial da comunidade de fãs de Mads Mikkelsen.",
+    back: "← Voltar",
+    formTitle: "Inscrição",
+    formSub: "Bobina n.º 04 — preenche cada fotograma. Todos os campos são obrigatórios.",
+    firstName: "Nome", lastName: "Sobrenome", email: "Endereço de email", phone: "Número de telefone",
+    address: "Endereço residencial", city: "Cidade", state: "Estado / Província", zip: "Código postal",
+    country: "País", selectCountry: "Selecione um país", countryOther: "Digite o seu país",
+    fanSince: "Há quanto tempo és fã de Mads Mikkelsen?", selectOne: "Selecione uma opção",
+    fan1: "Menos de um ano", fan2: "1–3 anos", fan3: "3–6 anos",
+    fan4: "Desde Hannibal (2013)", fan5: "Desde a era Pusher / Riget", fan6: "Desde que me lembro",
+    required: "Obrigatório", invalidEmail: "Insira um email válido",
+    submitting: "Enviando…", submit: "Enviar inscrição",
+    successEyebrow: "Inscrição recebida", successTitle: "Corta. Imprime.",
+    successBody: function(name, email) { return "Obrigado, " + name + ". A tua inscrição está registada. Revisamos cada bobina manualmente — espera resposta em cinco dias úteis em " + email + "."; },
+    home: "Voltar ao início"
+  },
+  sv: {
+    eyebrow: "Rulle nr. 04 — Öppen casting",
+    heroTitle1: "De trogna", heroTitle2: "Mikkelsen-fansen",
+    heroSub: "Ett stående affiliate-nätverk för dem som sett varje bildruta, lärt sig kindbenen och citerar tystnaderna också. Ansök en gång. Representera så länge det är på allvar.",
+    begin: "Starta ansökan",
+    d1Title: "Vad detta är",
+    d1Body: "Ett affiliateprogram för fan-drivna butiker, nyhetsbrev och sidor tillägnade Mads Mikkelsens arbete. Godkända affiliates får en referenslänk, en provisionsnivå och förtur till nya tryck, retrospektiv och visningar vi samarbetar kring.",
+    d2Title: "Vem vi söker",
+    d2Body: "Inga krav på antal följare. Vi bryr oss mer om hur länge fascinationen funnits och hur tydligt du kan prata om verket — Hannibals återhållsamhet, skräcken i Riget, glädjen och sorgen i Druk i samma andetag.",
+    d3Title: "Vad vi frågar om",
+    d3Body: "Dina kontakt- och adressuppgifter, för utbetalningar och enstaka fysiska utskick, samt ett ärligt svar: hur länge har du varit fan?",
+    footer: "De trogna Mikkelsen-fansen — den officiella affiliate-disken för Mads Mikkelsens fangemenskap.",
+    back: "← Tillbaka",
+    formTitle: "Ansökan",
+    formSub: "Rulle nr. 04 — fyll i varje bildruta. Alla fält krävs.",
+    firstName: "Förnamn", lastName: "Efternamn", email: "E-postadress", phone: "Telefonnummer",
+    address: "Hemadress", city: "Stad", state: "Stat / Region", zip: "Postnummer",
+    country: "Land", selectCountry: "Välj ett land", countryOther: "Skriv ditt land",
+    fanSince: "Hur länge har du varit fan av Mads Mikkelsen?", selectOne: "Välj ett alternativ",
+    fan1: "Mindre än ett år", fan2: "1–3 år", fan3: "3–6 år",
+    fan4: "Sedan Hannibal (2013)", fan5: "Sedan Pusher / Riget-eran", fan6: "Så länge jag kan minnas",
+    required: "Krävs", invalidEmail: "Ange en giltig e-postadress",
+    submitting: "Skickar…", submit: "Skicka ansökan",
+    successEyebrow: "Ansökan mottagen", successTitle: "Klipp. Skriv ut.",
+    successBody: function(name, email) { return "Tack, " + name + ". Din ansökan är registrerad. Vi granskar varje rulle för hand — förvänta dig svar inom fem arbetsdagar på " + email + "."; },
+    home: "Tillbaka till start"
+  },
+  no: {
+    eyebrow: "Rull nr. 04 — Åpen casting",
+    heroTitle1: "De trofaste", heroTitle2: "Mikkelsen-fansen",
+    heroSub: "Et fast affiliate-nettverk for dem som har sett hver eneste rute, lært kinnbeina og siterer stillhetene også. Søk én gang. Representer så lenge det er ekte.",
+    begin: "Start søknad",
+    d1Title: "Hva dette er",
+    d1Body: "Et affiliateprogram for fan-drevne butikker, nyhetsbrev og sider dedikert til Mads Mikkelsens arbeid. Godkjente affiliates får en henvisningslenke, en provisjonssats og første tilgang til nye trykk, retrospektiver og visninger vi samarbeider om.",
+    d2Title: "Hvem vi søker",
+    d2Body: "Ingen krav til antall følgere. Vi bryr oss mer om hvor lenge fascinasjonen har vart, og hvor klart du kan snakke om verket — Hannibals tilbakeholdenhet, frykten i Riget, gleden og sorgen i Druk i samme åndedrag.",
+    d3Title: "Hva vi spør om",
+    d3Body: "Kontakt- og adresseopplysningene dine, til utbetalinger og en sjelden fysisk forsendelse, samt ett ærlig svar: hvor lenge har du vært fan?",
+    footer: "De trofaste Mikkelsen-fansen — den offisielle affiliate-skranken for Mads Mikkelsens fanmiljø.",
+    back: "← Tilbake",
+    formTitle: "Søknad",
+    formSub: "Rull nr. 04 — fyll ut hver rute. Alle felt er obligatoriske.",
+    firstName: "Fornavn", lastName: "Etternavn", email: "E-postadresse", phone: "Telefonnummer",
+    address: "Hjemmeadresse", city: "By", state: "Stat / Region", zip: "Postnummer",
+    country: "Land", selectCountry: "Velg et land", countryOther: "Skriv ditt land",
+    fanSince: "Hvor lenge har du vært fan av Mads Mikkelsen?", selectOne: "Velg ett alternativ",
+    fan1: "Mindre enn et år", fan2: "1–3 år", fan3: "3–6 år",
+    fan4: "Siden Hannibal (2013)", fan5: "Siden Pusher / Riget-æraen", fan6: "Så lenge jeg kan minnes",
+    required: "Obligatorisk", invalidEmail: "Skriv inn en gyldig e-post",
+    submitting: "Sender…", submit: "Send søknad",
+    successEyebrow: "Søknad mottatt", successTitle: "Klipp. Skriv ut.",
+    successBody: function(name, email) { return "Takk, " + name + ". Søknaden din er registrert. Vi går gjennom hver rull manuelt — forvent svar innen fem virkedager på " + email + "."; },
+    home: "Tilbake til start"
+  },
+  pl: {
+    eyebrow: "Rolka nr 04 — Otwarty casting",
+    heroTitle1: "Wierni fani", heroTitle2: "Mikkelsena",
+    heroSub: "Stała sieć partnerska dla tych, którzy widzieli każdą scenę, znają jego kości policzkowe i cytują nawet milczenie. Aplikuj raz. Reprezentuj, dopóki to szczere.",
+    begin: "Zacznij aplikację",
+    d1Title: "O co tu chodzi",
+    d1Body: "Program partnerski dla sklepów, newsletterów i stron fanowskich poświęconych twórczości Madsa Mikkelsena. Zatwierdzeni partnerzy otrzymują link polecający, stawkę komisji oraz wcześniejszy dostęp do nowych odbitek, retrospektyw i pokazów, w których współpracujemy.",
+    d2Title: "Kogo szukamy",
+    d2Body: "Brak minimalnej liczby obserwujących. Ważniejsze jest, jak długo trwa twoja fascynacja i jak jasno mówisz o jego twórczości — powściągliwość Hannibala, grozę Riget, radość i żal Another Round w jednym oddechu.",
+    d3Title: "O co prosimy",
+    d3Body: "Twoje dane kontaktowe i adresowe, do wypłat i sporadycznej wysyłki fizycznej, oraz jedną szczerą odpowiedź: od jak dawna jesteś fanem?",
+    footer: "Wierni fani Mikkelsena — oficjalne biuro partnerskie społeczności fanów Madsa Mikkelsena.",
+    back: "← Wstecz",
+    formTitle: "Aplikacja",
+    formSub: "Rolka nr 04 — wypełnij każdą scenę. Wszystkie pola są wymagane.",
+    firstName: "Imię", lastName: "Nazwisko", email: "Adres e-mail", phone: "Numer telefonu",
+    address: "Adres domowy", city: "Miasto", state: "Stan / Region", zip: "Kod pocztowy",
+    country: "Kraj", selectCountry: "Wybierz kraj", countryOther: "Wpisz swój kraj",
+    fanSince: "Od jak dawna jesteś fanem Madsa Mikkelsena?", selectOne: "Wybierz jedną opcję",
+    fan1: "Mniej niż rok", fan2: "1–3 lata", fan3: "3–6 lat",
+    fan4: "Od Hannibala (2013)", fan5: "Od ery Pusher / Riget", fan6: "Odkąd pamiętam",
+    required: "Wymagane", invalidEmail: "Wprowadź prawidłowy adres e-mail",
+    submitting: "Wysyłanie…", submit: "Wyślij aplikację",
+    successEyebrow: "Aplikacja otrzymana", successTitle: "Cięcie. Drukuj.",
+    successBody: function(name, email) { return "Dziękujemy, " + name + ". Twoja aplikacja została zapisana. Każdą rolkę sprawdzamy ręcznie — odpowiedzi możesz oczekiwać w ciągu pięciu dni roboczych na " + email + "."; },
+    home: "Powrót do strony głównej"
+  }
+};
+
+var COUNTRIES = [
+  "United States", "United Kingdom", "Denmark", "Canada", "Australia",
+  "Germany", "France", "Sweden", "Norway", "Netherlands", "Ireland",
+  "New Zealand", "Other"
+];
+
+var FORMSPREE_ENDPOINT = "https://formspree.io/f/xjgqbeyo";
+
+// ---------------------------------------------------------------------------
+// App state
+// ---------------------------------------------------------------------------
+var state = {
+  route: "landing",
+  lang: "en",
+  form: {
+    firstName: "", lastName: "", email: "", phone: "",
+    address: "", city: "", zip: "", state: "", country: "", countryOther: "",
+    fanSince: ""
+  },
+  errors: {},
+  saving: false,
+  lastSubmitted: null
+};
+
+function t(key) {
+  var dict = TRANSLATIONS[state.lang] || TRANSLATIONS.en;
+  var val = (key in dict) ? dict[key] : TRANSLATIONS.en[key];
+  return val;
+}
+
+function escapeHtml(str) {
+  return String(str == null ? "" : str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+
+function detectLang() {
+  var supported = LANGUAGES.map(function (l) { return l.code; });
+  var browserLangs = (navigator.languages && navigator.languages.length) ? navigator.languages : [navigator.language || "en"];
+  for (var i = 0; i < browserLangs.length; i++) {
+    var code = browserLangs[i].toLowerCase().split("-")[0];
+    if (supported.indexOf(code) !== -1) return code;
+  }
+  return "en";
+}
+
+function sprocketHtml() {
+  var holes = "";
+  for (var i = 0; i < 18; i++) holes += '<span class="sprocket-hole"></span>';
+  return '<div class="sprocket" aria-hidden="true">' + holes + '</div>';
+}
+
+function langSwitcherHtml() {
+  var opts = LANGUAGES.map(function (l) {
+    return '<option value="' + l.code + '"' + (l.code === state.lang ? ' selected' : '') + '>' + l.label + '</option>';
+  }).join("");
+  return '<div class="top-bar"><select class="lang-switcher" id="lang-switcher" aria-label="Language">' + opts + '</select></div>';
+}
+
+// ---------------------------------------------------------------------------
+// Page renderers
+// ---------------------------------------------------------------------------
+function renderLanding() {
+  return (
+    '<div class="page landing">' +
+      langSwitcherHtml() +
+      sprocketHtml() +
+      '<header class="hero">' +
+        '<p class="eyebrow">' + escapeHtml(t("eyebrow")) + '</p>' +
+        '<h1>' + escapeHtml(t("heroTitle1")) + '<br>' + escapeHtml(t("heroTitle2")) + '</h1>' +
+        '<p class="hero-sub">' + escapeHtml(t("heroSub")) + '</p>' +
+        '<button class="cta" id="begin-btn">' + escapeHtml(t("begin")) + '</button>' +
+      '</header>' +
+      '<section class="dossier">' +
+        '<div class="dossier-row"><span class="dossier-index">I.</span><div><h3>' + escapeHtml(t("d1Title")) + '</h3><p>' + escapeHtml(t("d1Body")) + '</p></div></div>' +
+        '<div class="dossier-row"><span class="dossier-index">II.</span><div><h3>' + escapeHtml(t("d2Title")) + '</h3><p>' + escapeHtml(t("d2Body")) + '</p></div></div>' +
+        '<div class="dossier-row"><span class="dossier-index">III.</span><div><h3>' + escapeHtml(t("d3Title")) + '</h3><p>' + escapeHtml(t("d3Body")) + '</p></div></div>' +
+      '</section>' +
+      '<footer class="landing-footer"><p>' + escapeHtml(t("footer")) + '</p></footer>' +
+    '</div>'
+  );
+}
+
+function fieldHtml(id, label, inputHtml, errorKey) {
+  var err = state.errors[errorKey || id];
+  return (
+    '<label class="field" for="' + id + '">' +
+      '<span class="field-label">' + escapeHtml(label) + '</span>' +
+      inputHtml +
+      (err ? '<span class="error">' + escapeHtml(err) + '</span>' : '') +
+    '</label>'
+  );
+}
+
+function renderRegister() {
+  var f = state.form;
+  var countryOptions = '<option value="">' + escapeHtml(t("selectCountry")) + '</option>' +
+    COUNTRIES.map(function (c) {
+      return '<option value="' + escapeHtml(c) + '"' + (f.country === c ? ' selected' : '') + '>' + escapeHtml(c) + '</option>';
+    }).join("");
+
+  var fanKeys = ["fan1", "fan2", "fan3", "fan4", "fan5", "fan6"];
+  var fanOptions = '<option value="">' + escapeHtml(t("selectOne")) + '</option>' +
+    fanKeys.map(function (k) {
+      var label = t(k);
+      return '<option value="' + escapeHtml(label) + '"' + (f.fanSince === label ? ' selected' : '') + '>' + escapeHtml(label) + '</option>';
+    }).join("");
+
+  var html =
+    '<div class="page register">' +
+      langSwitcherHtml() +
+      sprocketHtml() +
+      '<button class="back-link" id="back-btn">' + escapeHtml(t("back")) + '</button>' +
+      '<h1 class="form-title">' + escapeHtml(t("formTitle")) + '</h1>' +
+      '<p class="form-sub">' + escapeHtml(t("formSub")) + '</p>' +
+      '<form id="app-form" novalidate>' +
+        '<div class="grid-2">' +
+          fieldHtml("firstName", t("firstName"), '<input id="firstName" value="' + escapeHtml(f.firstName) + '">') +
+          fieldHtml("lastName", t("lastName"), '<input id="lastName" value="' + escapeHtml(f.lastName) + '">') +
+        '</div>' +
+        '<div class="grid-2">' +
+          fieldHtml("email", t("email"), '<input type="email" id="email" value="' + escapeHtml(f.email) + '">') +
+          fieldHtml("phone", t("phone"), '<input type="tel" id="phone" value="' + escapeHtml(f.phone) + '">') +
+        '</div>' +
+        fieldHtml("address", t("address"), '<input id="address" value="' + escapeHtml(f.address) + '">').replace('class="field"', 'class="field field-full"') +
+        '<div class="grid-3">' +
+          fieldHtml("city", t("city"), '<input id="city" value="' + escapeHtml(f.city) + '">') +
+          fieldHtml("state", t("state"), '<input id="state" value="' + escapeHtml(f.state) + '">') +
+          fieldHtml("zip", t("zip"), '<input id="zip" value="' + escapeHtml(f.zip) + '">') +
+        '</div>' +
+        fieldHtml("country", t("country"), '<select id="country">' + countryOptions + '</select>').replace('class="field"', 'class="field field-full"') +
+        (f.country === "Other" ? fieldHtml("countryOther", t("countryOther"), '<input id="countryOther" value="' + escapeHtml(f.countryOther) + '">').replace('class="field"', 'class="field field-full"') : '') +
+        fieldHtml("fanSince", t("fanSince"), '<select id="fanSince">' + fanOptions + '</select>').replace('class="field"', 'class="field field-full"') +
+        '<button class="cta cta-submit" type="submit" id="submit-btn"' + (state.saving ? ' disabled' : '') + '>' +
+          escapeHtml(state.saving ? t("submitting") : t("submit")) +
+        '</button>' +
+      '</form>' +
+    '</div>';
+  return html;
+}
+
+function renderSuccess() {
+  var f = state.lastSubmitted || {};
+  return (
+    '<div class="page success">' +
+      langSwitcherHtml() +
+      sprocketHtml() +
+      '<p class="eyebrow">' + escapeHtml(t("successEyebrow")) + '</p>' +
+      '<h1>' + escapeHtml(t("successTitle")) + '</h1>' +
+      '<p class="success-body">' + escapeHtml(t("successBody")(f.firstName || "", f.email || "")) + '</p>' +
+      '<button class="cta" id="home-btn">' + escapeHtml(t("home")) + '</button>' +
+    '</div>'
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Render + event wiring
+// ---------------------------------------------------------------------------
+function render() {
+  var root = document.getElementById("root");
+  if (state.route === "landing") root.innerHTML = renderLanding();
+  else if (state.route === "register") root.innerHTML = renderRegister();
+  else root.innerHTML = renderSuccess();
+  wireEvents();
+}
+
+function wireEvents() {
+  var langEl = document.getElementById("lang-switcher");
+  if (langEl) {
+    langEl.addEventListener("change", function (e) {
+      state.lang = e.target.value;
+      render();
+    });
+  }
+
+  var beginBtn = document.getElementById("begin-btn");
+  if (beginBtn) {
+    beginBtn.addEventListener("click", function () {
+      state.route = "register";
+      render();
+    });
+  }
+
+  var backBtn = document.getElementById("back-btn");
+  if (backBtn) {
+    backBtn.addEventListener("click", function () {
+      state.route = "landing";
+      render();
+    });
+  }
+
+  var homeBtn = document.getElementById("home-btn");
+  if (homeBtn) {
+    homeBtn.addEventListener("click", function () {
+      state.route = "landing";
+      render();
+    });
+  }
+
+  var formEl = document.getElementById("app-form");
+  if (formEl) {
+    var ids = ["firstName", "lastName", "email", "phone", "address", "city", "state", "zip", "country", "countryOther", "fanSince"];
+    ids.forEach(function (id) {
+      var el = document.getElementById(id);
+      if (!el) return;
+      el.addEventListener("input", function () {
+        state.form[id] = el.value;
+      });
+      el.addEventListener("change", function () {
+        state.form[id] = el.value;
+        if (id === "country") render(); // re-render to show/hide countryOther field
+      });
+    });
+
+    formEl.addEventListener("submit", function (e) {
+      e.preventDefault();
+      handleSubmit();
+    });
+  }
+}
+
+function validate() {
+  var f = state.form;
+  var required = ["firstName", "lastName", "email", "phone", "address", "city", "zip", "state", "country", "fanSince"];
+  var errs = {};
+  required.forEach(function (k) {
+    if (!f[k] || !String(f[k]).trim()) errs[k] = t("required");
+  });
+  if (f.email && !/^\S+@\S+\.\S+$/.test(f.email)) {
+    errs.email = t("invalidEmail");
+  }
+  if (f.country === "Other" && (!f.countryOther || !f.countryOther.trim())) {
+    errs.countryOther = t("required");
+  }
+  state.errors = errs;
+  return Object.keys(errs).length === 0;
+}
+
+function handleSubmit() {
+  if (!validate()) {
+    render();
+    return;
+  }
+  state.saving = true;
+  render();
+
+  var f = state.form;
+  var resolvedCountry = f.country === "Other" ? f.countryOther : f.country;
+  var payload = {};
+  for (var k in f) { if (Object.prototype.hasOwnProperty.call(f, k)) payload[k] = f[k]; }
+  payload.country = resolvedCountry;
+
+  try {
+    var id = "app_" + Date.now();
+    localStorage.setItem(id, JSON.stringify(Object.assign({}, payload, { submittedAt: new Date().toISOString() })));
+  } catch (err) {
+    console.error("Could not save application locally", err);
+  }
+
+  fetch(FORMSPREE_ENDPOINT, {
+    method: "POST",
+    headers: { "Content-Type": "application/json", "Accept": "application/json" },
+    body: JSON.stringify(payload)
+  }).catch(function (err) {
+    console.error("Could not send application email", err);
+  }).then(function () {
+    state.saving = false;
+    state.lastSubmitted = payload;
+    state.route = "success";
+    render();
+  });
+}
+
+// ---------------------------------------------------------------------------
+// Boot
+// ---------------------------------------------------------------------------
+state.lang = detectLang();
+render();
+</script>
+</body>
+</html>
